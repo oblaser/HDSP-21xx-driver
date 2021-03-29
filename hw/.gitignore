@@ -1,4 +1,4 @@
 BackupFiles/
-XGerber/
+v*/XGerber/*
 !v*/XGerber/*.zip
 *.T300[01]OPEN
