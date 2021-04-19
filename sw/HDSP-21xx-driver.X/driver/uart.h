@@ -14,16 +14,27 @@
 
 #include "../project.h"
 
+
+
+#define UART_READ_NODATA ((int)-1)
+#define UART_READ_BUFFEROVERFLOW ((int)-2)
+
+
+
 void UART_init();
 
-int UART_print(const char* str);
-int UART_printf(const char* format, ...);
-int UART_write(const uint8_t* data, size_t count);
-
-int UART_isReceiving();
+void UART_reset();
 int UART_isTransmitting();
 
-void UART_isrRx();
-void UART_isrTx();
+int UART_print(const char* str);
+int UART_write(const uint8_t* data, size_t count);
+
+void UART_blocking_print(const char* str);
+void UART_blocking_write(const uint8_t* data, size_t count);
+
+int UART_read();
+
+void UART_rx_isr();
+void UART_tx_isr();
 
 #endif // _UART_H_

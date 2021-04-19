@@ -35,10 +35,10 @@ typedef struct
 
 void GPIO_init();
 
-GPIO_input_t GPIO_inpDetect();
+void GPIO_inpDetect(GPIO_input_t* inp);
 
 void GPIO_dispData_write(uint8_t data);
 uint8_t GPIO_dispData_read();
-void GPIO_dispData_R_nW(int R_nW);
+void GPIO_dispData_R_nW(uint8_t R_nW);
 
 #endif // _GPIO_H_

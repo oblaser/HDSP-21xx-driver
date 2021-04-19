@@ -8,6 +8,12 @@
 
 #include "gpio.h"
 
+
+
+void readInp(GPIO_inpType_t* inp);
+
+
+
 void GPIO_init()
 {
     ANSEL   = 0b00000000;
@@ -35,27 +41,23 @@ void GPIO_init()
 #endif
     
     // to have a valid inpOld
-    GPIO_inpDetect();
+    GPIO_inpDetect(0);
 }
 
-GPIO_input_t GPIO_inpDetect()
+void GPIO_inpDetect(GPIO_input_t* inp)
 {
     static GPIO_inpType_t inpOld = 0;
-    GPIO_input_t r;
-    r.state = 0;
     
-#if(PRJ_PROGIO_IN)
-    if (GPIO_PROGIO) r.state |= GPIO_INP_PROGIO;
-#endif
-    
-    if(GPIO_BUTTON) r.state |= GPIO_INP_BUTTON;
-    
-    r.rising = ~inpOld & r.state;
-    r.falling = inpOld & ~r.state;
-    
-    inpOld = r.state;
-    
-    return r;
+    if(inp)
+    {
+        readInp(&(inp->state));
+        
+        inp->rising = ~inpOld & inp->state;
+        inp->falling = inpOld & ~inp->state;
+
+        inpOld = inp->state;
+    }
+    else readInp(&inpOld);
 }
 
 void GPIO_dispData_write(uint8_t data)
@@ -79,7 +81,7 @@ uint8_t GPIO_dispData_read()
     return r;
 }
 
-void GPIO_dispData_R_nW(int R_nW)
+void GPIO_dispData_R_nW(uint8_t R_nW)
 {
     if(R_nW)
     {
@@ -90,5 +92,21 @@ void GPIO_dispData_R_nW(int R_nW)
     {
         TRISC &= ~0x3F;
         TRISAbits.TRISA5 = 0;
+    }
+}
+
+
+
+void readInp(GPIO_inpType_t* inp)
+{
+    if(inp)
+    {
+        *inp = 0;
+        
+#if(PRJ_PROGIO_IN)
+        if (GPIO_PROGIO) *inp |= GPIO_INP_PROGIO;
+#endif
+
+        if(GPIO_BUTTON) *inp |= GPIO_INP_BUTTON;
     }
 }
