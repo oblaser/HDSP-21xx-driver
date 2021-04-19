@@ -9,7 +9,9 @@
 #ifndef _APPMAIN_H_
 #define	_APPMAIN_H_
 
-void APP_task();
+#include "../middleware/task.h"
+
+void APP_task(TASK_status_t* ts);
 
 void APP_timeHandler();
 

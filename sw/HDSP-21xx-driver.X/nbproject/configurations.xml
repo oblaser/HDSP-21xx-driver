@@ -26,6 +26,10 @@
       <itemPath>middleware/hdsp_21xx.h</itemPath>
       <itemPath>middleware/util.c</itemPath>
       <itemPath>middleware/util.h</itemPath>
+      <itemPath>middleware/com.c</itemPath>
+      <itemPath>middleware/com.h</itemPath>
+      <itemPath>middleware/task.c</itemPath>
+      <itemPath>middleware/task.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"

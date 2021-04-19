@@ -8,7 +8,7 @@
 
 #include "appMain.h"
 
-void APP_task()
+void APP_task(TASK_status_t* ts)
 {
 }
 
