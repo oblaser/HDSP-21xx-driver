@@ -9,8 +9,7 @@
 #ifndef _GPIO_H_
 #define _GPIO_H_
 
-#include <stdint.h>
-
+#include "../types.h"
 #include "../project.h"
 #include "hardware_16F690.h"
 

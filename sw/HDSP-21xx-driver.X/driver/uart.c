@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -69,6 +69,8 @@ int UART_isTransmitting()
 
 int UART_print(const char* str)
 {
+    if(!str) return UART_WRITE_INVBUFFER;
+    
     size_t n = 0;
     
     while(*(str + n) != 0) ++n;
@@ -78,8 +80,8 @@ int UART_print(const char* str)
 
 int UART_write(const uint8_t* data, size_t count)
 {
-    if(count > ((size_t)TX_BUF_SIZE)) return 2;
-    if(TXIE) return 1;
+    if((count > ((size_t)TX_BUF_SIZE)) || (!data)) return UART_WRITE_INVBUFFER;
+    if(TXIE) return UART_WRITE_BUSY;
     
     txSize = count;
     txIndex = 0;
@@ -88,19 +90,21 @@ int UART_write(const uint8_t* data, size_t count)
     
     TXIE = 1;
     
-    return 0;
+    return UART_WRITE_OK;
 }
 
-void UART_blocking_print(const char* str)
+int UART_blocking_print(const char* str)
 {
-    int r = 1;
-    while(r == 1) r = UART_print(str);
+    int r = UART_WRITE_BUSY;
+    while(r == UART_WRITE_BUSY) r = UART_print(str);
+    return r;
 }
 
-void UART_blocking_write(const uint8_t* data, size_t count)
+int UART_blocking_write(const uint8_t* data, size_t count)
 {
-    int r = 1;
-    while(r == 1) r = UART_write(data, count);
+    int r = UART_WRITE_BUSY;
+    while(r == UART_WRITE_BUSY) r = UART_write(data, count);
+    return r;
 }
 
 int UART_read()
@@ -148,6 +152,6 @@ void incRxIndexWr()
 
 
 // invalid config check
-#if((RX_BUF_SIZE < 2) || (RX_BUF_SIZE > 0x7FFF) || (TX_BUF_SIZE > 0x7FFF))
+#if((RX_BUF_SIZE < 2) || (RX_BUF_SIZE > 0x7FFF) || (TX_BUF_SIZE < 1) || (TX_BUF_SIZE > 0x7FFF))
 #error invalid config
 #endif

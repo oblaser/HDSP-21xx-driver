@@ -25,12 +25,12 @@ void GPIO_init()
     IOCA    = 0b00000000;
     
     PORTB = 0;
-    TRISB   = 0b11100000;
+    TRISB   = 0b10100000;
     WPUB    = 0b00000000;
     IOCB    = 0b00000000;
     
     PORTC = 0;
-    TRISC   = 0b11111111;
+    TRISC   = 0b01111111;
     
 #if(PRJ_PROGIO_IN)
     WPUAbits.WPUA4 = 1;

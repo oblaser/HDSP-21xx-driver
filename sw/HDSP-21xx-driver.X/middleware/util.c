@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -56,3 +56,12 @@ int UTIL_itoa(int32_t value, char* buffer, size_t bufferSize)
     
     return (p - buffer);
 }
+
+#if(UTIL_CONFIG_USE_ITOA_BUFFER)
+static char itoa_buffer[_UTIL_ITOA_BUFFERSIZE];
+const char* UTIL_itoap(int32_t value)
+{
+    if(UTIL_itoa(value, itoa_buffer, (sizeof(itoa_buffer)/sizeof(itoa_buffer[0]))) < 0) return 0;
+    return itoa_buffer;
+}
+#endif

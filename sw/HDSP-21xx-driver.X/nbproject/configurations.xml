@@ -12,6 +12,8 @@
       <itemPath>driver/hardware_16F690.h</itemPath>
       <itemPath>driver/uart.c</itemPath>
       <itemPath>driver/uart.h</itemPath>
+      <itemPath>driver/spi.c</itemPath>
+      <itemPath>driver/spi.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -42,6 +44,7 @@
     </logicalFolder>
     <itemPath>main.c</itemPath>
     <itemPath>project.h</itemPath>
+    <itemPath>types.h</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
