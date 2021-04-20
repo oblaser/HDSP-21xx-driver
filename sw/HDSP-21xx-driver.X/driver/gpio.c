@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -9,6 +9,7 @@
 #include "gpio.h"
 
 
+#define PORTC_DISP_MASK (0x7F)
 
 void readInp(GPIO_inpType_t* inp);
 
@@ -60,37 +61,36 @@ void GPIO_inpDetect(GPIO_input_t* inp)
     else readInp(&inpOld);
 }
 
-void GPIO_dispData_write(uint8_t data)
+void GPIO_DISP_setData(uint8_t data)
 {
-    GPIO_dispData_R_nW(0);
-    
-    PORTC = (data & 0x3F);
-    
-    if(data & 0x80) PORTAbits.RA5 = 1; 
-    else PORTAbits.RA5 = 0;
+    if(((TRISC & PORTC_DISP_MASK) == 0) && (TRISAbits.TRISA5 == 0))
+    {
+        PORTC = (data & PORTC_DISP_MASK);
+
+        if(data & 0x80) PORTAbits.RA5 = 1; 
+        else PORTAbits.RA5 = 0;
+    }
 }
 
-uint8_t GPIO_dispData_read()
+uint8_t GPIO_DISP_getData()
 {
-    GPIO_dispData_R_nW(1);
-    
-    uint8_t r = (PORTC & 0x3F);
+    uint8_t r = (PORTC & PORTC_DISP_MASK);
     
     if(PORTAbits.RA5) r |= 0x80;
     
     return r;
 }
 
-void GPIO_dispData_R_nW(uint8_t R_nW)
+void GPIO_DISP_R_nW(uint8_t R_nW)
 {
     if(R_nW)
     {
-        TRISC |= 0x3F;
+        TRISC |= PORTC_DISP_MASK;
         TRISAbits.TRISA5 = 1;
     }
     else
     {
-        TRISC &= ~0x3F;
+        TRISC &= ~PORTC_DISP_MASK;
         TRISAbits.TRISA5 = 0;
     }
 }

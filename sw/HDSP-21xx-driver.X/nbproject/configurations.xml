@@ -32,6 +32,8 @@
       <itemPath>middleware/com.h</itemPath>
       <itemPath>middleware/task.c</itemPath>
       <itemPath>middleware/task.h</itemPath>
+      <itemPath>middleware/shiftReg.c</itemPath>
+      <itemPath>middleware/shiftReg.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"

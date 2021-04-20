@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -14,7 +14,7 @@
 #include "hardware_16F690.h"
 
 #define GPIO_BUTTON PORTAbits.RA2
-#define GPIO_SHIFTREG_LATCH PORTBbits.RB4
+#define GPIO_SHR_LATCH PORTBbits.RB4
 #if(PRJ_PROGIO_IN || PRJ_PROGIO_OUT)
 #define GPIO_PROGIO PORTAbits.RA4
 #endif
@@ -36,8 +36,8 @@ void GPIO_init();
 
 void GPIO_inpDetect(GPIO_input_t* inp);
 
-void GPIO_dispData_write(uint8_t data);
-uint8_t GPIO_dispData_read();
-void GPIO_dispData_R_nW(uint8_t R_nW);
+void GPIO_DISP_setData(uint8_t data);
+uint8_t GPIO_DISP_getData();
+void GPIO_DISP_R_nW(uint8_t R_nW);
 
 #endif // _GPIO_H_

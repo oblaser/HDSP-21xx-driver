@@ -11,17 +11,17 @@
 #include "spi.h"
 
 
-#define TX_BUF_SIZE (20)
+/*#define TX_BUF_SIZE (20)
 
 static uint8_t txBuf[TX_BUF_SIZE];
 static size_t txIndex;
-static size_t txSize;
+static size_t txSize;*/
 
 
 void SPI_init()
 {
-    SSPCONbits.SSPM0 = 0;
-    SSPCONbits.SSPM1 = 1;
+    SSPCONbits.SSPM0 = 1;
+    SSPCONbits.SSPM1 = 0;
     SSPCONbits.SSPM2 = 0;
     SSPCONbits.SSPM3 = 0;
     
@@ -35,7 +35,7 @@ void SPI_init()
     SSPIE = 0;
 }
 
-int SPI_write(const uint8_t* data, size_t count)
+/*int SPI_write(const uint8_t* data, size_t count)
 {
     if(SSPIE) return SPI_WRITE_BUSY;
     if((count > ((size_t)TX_BUF_SIZE)) || (count < 1) || (!data)) return SPI_WRITE_INVBUFFER;
@@ -50,9 +50,9 @@ int SPI_write(const uint8_t* data, size_t count)
     SSPIE = 1;
     
     return SPI_WRITE_OK;
-}
+}*/
 
-// with SSPM = 0b0001 (Fosc/16) and two bytes the function takes 69us (compiler -O2)
+// with SSPM = 0b0001 (Fosc/16) and two bytes the function takes 69us (compiler -O2) @8MHz
 void SPI_blocking_write(const uint8_t* data, size_t count)
 {
     if(data)
@@ -66,10 +66,10 @@ void SPI_blocking_write(const uint8_t* data, size_t count)
     }
 }
 
-void SPI_isr()
+/*void SPI_isr()
 {
     if(txIndex < txSize) SSPBUF = txBuf[txIndex++];
     else SSPIE = 0;
     
     SSPIF = 0;
-}
+}*/

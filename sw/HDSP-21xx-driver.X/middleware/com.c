@@ -1,18 +1,17 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
 
-#include <stdint.h>
-
+#include "../types.h"
 #include "com.h"
 
 
 
-void calcCheckSum(uint8_t* cs, const uint8_t* data, unsigned count);
+void calcCheckSum(uint8_t* cs, const uint8_t* data, size_t count);
 
 static uint8_t rxBuffer[11];
 
@@ -26,10 +25,15 @@ void COM_timeHandler()
 {
 }
 
-
-
-void calcCheckSum(uint8_t* cs, const uint8_t* data, unsigned count)
+void COM_sendTaskError(const TASK_status_t* ts)
 {
-    *cs = 0;
-    for(unsigned i = 0; i < count; ++i) *cs ^= *(data + i);
+    
+}
+
+
+
+void calcCheckSum(uint8_t* cs, const uint8_t* data, size_t count)
+{
+    *cs = *data;
+    for(size_t i = 1; i < count; ++i) *cs ^= *(data + i);
 }

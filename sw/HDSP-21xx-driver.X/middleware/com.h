@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -14,5 +14,7 @@
 void COM_task(TASK_status_t* ts);
 
 void COM_timeHandler();
+
+void COM_sendTaskError(const TASK_status_t* ts);
 
 #endif // _COM_H_

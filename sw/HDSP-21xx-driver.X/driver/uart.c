@@ -72,7 +72,6 @@ int UART_print(const char* str)
     if(!str) return UART_WRITE_INVBUFFER;
     
     size_t n = 0;
-    
     while(*(str + n) != 0) ++n;
     
     return UART_write((const uint8_t*)str, n);
@@ -80,8 +79,8 @@ int UART_print(const char* str)
 
 int UART_write(const uint8_t* data, size_t count)
 {
-    if((count > ((size_t)TX_BUF_SIZE)) || (!data)) return UART_WRITE_INVBUFFER;
     if(TXIE) return UART_WRITE_BUSY;
+    if((count > ((size_t)TX_BUF_SIZE)) || (!data)) return UART_WRITE_INVBUFFER;
     
     txSize = count;
     txIndex = 0;
@@ -97,6 +96,7 @@ int UART_blocking_print(const char* str)
 {
     int r = UART_WRITE_BUSY;
     while(r == UART_WRITE_BUSY) r = UART_print(str);
+    while(UART_write(0, 0) == UART_WRITE_BUSY) asm("NOP");
     return r;
 }
 
@@ -104,6 +104,7 @@ int UART_blocking_write(const uint8_t* data, size_t count)
 {
     int r = UART_WRITE_BUSY;
     while(r == UART_WRITE_BUSY) r = UART_write(data, count);
+    while(UART_write(0, 0) == UART_WRITE_BUSY) asm("NOP");
     return r;
 }
 
