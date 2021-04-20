@@ -29,7 +29,7 @@ A driver for LED character displays.
 The answers first data byte is a status byte, which is interpreted as following:
 | Byte | Value | Description |
 |:---|:---|:---|
-| DATA0 | 0x00<br/>0x01<br/>0x02<br/>0x03<br/>0x04 .. 0xFF | OK<br/>General error<br/>Wrong parameter<br/>Invalid checksum<br/>_res._ |
+| DATA0 | 0x00<br/>0x01<br/>0x02<br/>0x03<br/>0x04 ... 0xFF | OK<br/>General error<br/>Invalid parameter<br/>Invalid checksum<br/>_res._ |
 
 
 ## Commands
@@ -39,15 +39,15 @@ The answers first data byte is a status byte, which is interpreted as following:
 |:---|:---|:---|
 | CMD | 0x01 ||
 | LEN | 0x01 ||
-| DATA | 0x00<br/>0x01 .. 0xFF | Version<br/>_res._ |
+| DATA | 0x00<br/>0x01 ... 0xFF | Version<br/>_res._ |
 | CS | 0xXX ||
 
 #### Answer Version
 | Byte | Value | Description |
 |:---|:---|:---|
 | CMD | 0x01 ||
-| LEN | 0x03 ||
-| DATA0<br/>1<br/>2 | 0xXX<br/>0xXX<br/>0xXX | Status<br/>Version major<br/>Version minor |
+| LEN | 0x04 ||
+| DATA0<br/>1<br/>2<br/>3 | 0xXX<br/>0x00<br/>0xXX<br/>0xXX | Status<br/>Type = Version<br/>Version major<br/>Version minor |
 | CS | 0xXX ||
 
 ### Set Display
@@ -110,15 +110,15 @@ May be sent at any time and indicate an error.
 ### Default Error
 | Byte | Value | Description |
 |:---|:---|:---|
-| CMD | 0x80 ||
+| CMD | 0xE0 ||
 | LEN | 0x01 ||
-| DATA | 0x00<br/>0x01<br/>0x02 .. 0xFF | Unspecified error<br/>RX buffer overflow<br/>_res._ |
+| DATA | 0x00<br/>0x01<br/>0x02<br/>0x03 ... 0xFF | Unspecified error<br/>RX buffer overflow<br/>Timeout<br/>_res._ |
 | CS | 0xXX ||
 
 ### Task Error
 | Byte | Value | Description |
 |:---|:---|:---|
-| CMD | 0x81 ||
+| CMD | 0xE1 ||
 | LEN | 0x01 ||
 | DATA | 0xXX | The task status byte collected by the error handler |
 | CS | 0xXX ||

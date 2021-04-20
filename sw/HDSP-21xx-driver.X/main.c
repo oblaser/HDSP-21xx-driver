@@ -43,10 +43,6 @@ int main()
     GPIO_PROGIO = 0;
 #endif
     
-#if PRJ_DEBUG_UART
-    UART_print("=====\n\nstarted...\n");
-#endif
-    
     while(1)
     {
         HW_wdtClr();

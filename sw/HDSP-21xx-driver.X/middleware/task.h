@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           19.04.2021
+\date           20.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -17,7 +17,6 @@
 
 #define TASK_TAPP ((TASK_status_t)0x80)
 #define TASK_TCOM ((TASK_status_t)0x40)
-#define TASK_TSHR ((TASK_status_t)0x20)
 
 #define TASK_ERR ((TASK_status_t)0x01)
 #define TASK_STATE ((TASK_status_t)0x02)
