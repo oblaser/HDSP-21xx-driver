@@ -141,14 +141,15 @@ The data format is described in the displays [datasheet](https://docs.broadcom.c
 | 0x7C &#124; | &#166; (U+00A6) |
 
 ### Control Characters
+Control Characters are displayed according to the following table:
 | char | displayed as || char | displayed as |
 |:---:|:---:|:---:|:---:|:---:|
 | 0x00 | &#9204; (U+23F4) || 0x10 | &#; () |
 | 0x01 | &#191; (U+00BF) || 0x11 | &#; () |
 | 0x02 | x̅ (U+0078 U+0305) || 0x12 | &#; () |
-| 0x03 | N̅ () || 0x13 | &#; () |
-| 0x04 | n̅ () || 0x14 | &#; () |
-| 0x05 | &#; () || 0x15 | &#; () |
+| 0x03 | N̅ (U+004E U+0305) || 0x13 | &#; () |
+| 0x04 | n̅ (U+006E U+0305) || 0x14 | &#; () |
+| 0x05 | &#945; (U+03B1) || 0x15 | &#; () |
 | 0x06 | &#; () || 0x16 | &#; () |
 | 0x07 | &#; () || 0x17 | &#; () |
 | 0x08 | &#; () || 0x18 | &#; () |
