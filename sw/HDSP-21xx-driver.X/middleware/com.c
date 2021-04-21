@@ -16,10 +16,6 @@
 
 #define COM_nFRAMEBYTES (3)
 
-#define COM_CMD_GETINFO ((uint8_t)0x01)
-#define COM_CMD_SETDISP ((uint8_t)0x0A)
-#define COM_CMD_SETIO   ((uint8_t)0x10)
-#define COM_CMD_GETIO   ((uint8_t)0x11)
 #define COM_CMD_ERRDEF  ((uint8_t)0xE0)
 #define COM_CMD_ERRTASK ((uint8_t)0xE1)
 
@@ -35,7 +31,10 @@
 
 #define RXBUFFER_SIZE ((size_t)15)
 #define TXBUFFER_SIZE ((size_t)10)
+
+#define BUFFERPOS_CMD ((size_t)0)
 #define BUFFERPOS_LEN ((size_t)1)
+#define BUFFERPOS_DATA ((size_t)2)
 
 #if PRJ_DEBUG
 #define T_TIMEOUT (100) // * 10ms
@@ -73,6 +72,7 @@ static uint8_t rxBuffer[RXBUFFER_SIZE];
 static uint8_t txBuffer[TXBUFFER_SIZE];
 static uint8_t rxIndex;
 static int tmr_timeout;
+static const uint8_t* const pRxData = &rxBuffer[BUFFERPOS_DATA];
 
 static state_t state = S_init;
 
@@ -102,13 +102,13 @@ void COM_task(TASK_status_t* ts)
     switch(state)
     {
         case S_init:
-            rxBuffer[BUFFERPOS_LEN] = 0xFF - COM_nFRAMEBYTES;
             state = S_idle;
             break;
             
         case S_idle:
             rxIndex = 0;
             tmr_timeout = -1;
+            rxBuffer[BUFFERPOS_LEN] = 0xFF - COM_nFRAMEBYTES;
             state = S_idleProc;
             break;
             
@@ -179,7 +179,7 @@ void COM_task(TASK_status_t* ts)
                 {
                     if(rxBuffer[0] == COM_CMD_GETINFO)
                     {
-                        // version is the only info which can be getted
+                        // version is the only info which can be getted atm
                         txBuffer[0] = rxBuffer[0];
                         txBuffer[1] = 0x04;
                         txBuffer[2] = COM_ANS_STATUS_OK;
@@ -212,8 +212,6 @@ void COM_task(TASK_status_t* ts)
                 dbgStr[len + 2] = 0;
                 UART_print_wait(dbgStr);
 #endif
-                
-                rxBuffer[BUFFERPOS_LEN] = 0xFF - COM_nFRAMEBYTES;
             }
             break;
             
@@ -258,6 +256,48 @@ void COM_timeHandler()
     if(tmr_timeout > 0) --tmr_timeout;
 }
 
+uint8_t COM_APP_cmd()
+{
+    if(state == S_waitForApp) return rxBuffer[0];
+    
+    return COM_CMD_NONE;
+}
+
+const uint8_t* COM_APP_getDispPtr()
+{
+    return pRxData;
+}
+
+uint8_t COM_APP_getIoData()
+{
+    return *pRxData;
+}
+
+void COM_APP_sendOK()
+{
+    if(state == S_waitForApp)
+    {
+        txBuffer[0] = rxBuffer[0];
+        txBuffer[1] = 0x01;
+        txBuffer[2] = COM_ANS_STATUS_OK;
+
+        state = S_send;
+    }
+}
+
+void COM_APP_sendGetIO(uint8_t ioState)
+{
+    if(state == S_waitForApp)
+    {
+        txBuffer[0] = rxBuffer[0];
+        txBuffer[1] = 0x02;
+        txBuffer[2] = COM_ANS_STATUS_OK;
+        txBuffer[3] = ioState;
+
+        state = S_send;
+    }
+}
+
 void COM_sendTaskError(const TASK_status_t* ts)
 {    
     txBuffer[0] = COM_CMD_ERRTASK;
@@ -280,11 +320,12 @@ uint8_t calcCheckSum(const uint8_t* data, size_t count)
 int isValidCmd(const uint8_t* data)
 {
     if(!data) return 0;
+    if(data[0] == COM_CMD_NONE) return 0;
     
-    if(((data[0] == COM_CMD_GETINFO) && (data[1] == 1)) ||
-        ((data[0] == COM_CMD_SETDISP) && (data[1] == 8)) ||
-        ((data[0] == COM_CMD_SETIO) && (data[1] == 1)) ||
-        ((data[0] == COM_CMD_GETIO) && (data[1] == 0)))
+    if(((data[BUFFERPOS_CMD] == COM_CMD_GETINFO) && (data[BUFFERPOS_LEN] == 1)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETDISP) && (data[BUFFERPOS_LEN] == 8)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && (data[BUFFERPOS_LEN] == 1)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_GETIO) && (data[BUFFERPOS_LEN] == 0)))
     {
         return 1;
     }
@@ -296,8 +337,8 @@ int isValidParam(const uint8_t* data)
 {
     if(!data) return 0;
     
-    if(((data[0] == COM_CMD_GETINFO) && (data[2] > 0x00)) ||
-        ((data[0] == COM_CMD_SETIO) && ((data[2] & 0xF0) != 0)))
+    if(((data[BUFFERPOS_CMD] == COM_CMD_GETINFO) && (data[BUFFERPOS_DATA] > 0x00)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && ((data[BUFFERPOS_DATA] & 0xF0) != 0)))
     {
         return 0;
     }

@@ -92,13 +92,6 @@ int main()
     
 #if (PRJ_DEBUG_UART)
     UART_print_blocking("\n-===# started #===-\n");
-    
-    /*char tmpStr[11];
-    const uint8_t d[] = { 0xFA, 0xA5, 13 };
-    size_t len = UTIL_bufToHexStr(d, 3, tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
-    tmpStr[len] = 0x0A;
-    tmpStr[len + 1] = 0;
-    UART_print_wait(tmpStr);*/
 #endif
     
     while(1)

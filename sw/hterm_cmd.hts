@@ -1,0 +1,48 @@
+<HtermSequenceFile>
+    <ItemList>
+        <SequenceItem name="SetDisplay ABC">
+            <description></description>
+            <sequence value="h[0A] h[08] a[ABCDEFGH] h[0A]" />
+        </SequenceItem>
+        <SequenceItem name="SetDisplay abc">
+            <description></description>
+            <sequence value="h[0A] h[08] a[abcdefgh] h[0A]" />
+        </SequenceItem>
+        <SequenceItem name="SetDisplay Test">
+            <description></description>
+            <sequence value="h[0A] h[08] a[Test :) ] h[27]" />
+        </SequenceItem>
+        <SequenceItem name="SetDisplay UDC 0-7">
+            <description></description>
+            <sequence value="h[0A] h[08] h[80] h[81] h[82] h[83] h[84] h[85] h[86] h[87] h[02]" />
+        </SequenceItem>
+        <SequenceItem name="SetDisplay UDC 8-15">
+            <description></description>
+            <sequence value="h[0A] h[08] h[88] h[89] h[8A] h[8B] h[8C] h[8D] h[8E] h[8F] h[02]" />
+        </SequenceItem>
+        <SequenceItem name="GetInfo Version">
+            <description></description>
+            <sequence value="h[01] h[01] h[00] h[00]" />
+        </SequenceItem>
+        <SequenceItem name="SetIO 0">
+            <description></description>
+            <sequence value="h[10] h[01] h[00] h[11]" />
+        </SequenceItem>
+        <SequenceItem name="SetIO 5">
+            <description></description>
+            <sequence value="h[10] h[01] h[05] h[14]" />
+        </SequenceItem>
+        <SequenceItem name="SetIO A">
+            <description></description>
+            <sequence value="h[10] h[01] h[0A] h[1B]" />
+        </SequenceItem>
+        <SequenceItem name="SetIO F">
+            <description></description>
+            <sequence value="h[10] h[01] h[0F] h[1E]" />
+        </SequenceItem>
+        <SequenceItem name="GetIO">
+            <description></description>
+            <sequence value="h[11] h[00] h[11]" />
+        </SequenceItem>
+    </ItemList>
+</HtermSequenceFile>

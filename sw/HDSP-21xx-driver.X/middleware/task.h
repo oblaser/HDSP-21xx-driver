@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -21,6 +21,7 @@
 #define TASK_ERR ((TASK_status_t)0x01)
 #define TASK_STATE ((TASK_status_t)0x02)
 #define TASK_TIMEOUT ((TASK_status_t)0x04)
+#define TASK_INVCMD ((TASK_status_t)0x08)
 
 
 typedef uint8_t TASK_status_t;
