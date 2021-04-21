@@ -21,7 +21,7 @@
 void SPI_init();
 
 //int SPI_write(const uint8_t* data, size_t count);
-void SPI_blocking_write(const uint8_t* data, size_t count);
+void SPI_write_blocking(const uint8_t* data, size_t count);
 
 //void SPI_isr();
 

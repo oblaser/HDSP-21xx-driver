@@ -1,12 +1,10 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
-
-#include <stdint.h>
 
 #include "hardware_16F690.h"
 #include "uart.h"
@@ -67,16 +65,27 @@ int UART_isTransmitting()
     return 0;
 }
 
+/**
+ * @brief UART print
+ * @param str Pointer to a null terminated string
+ * @return UART_WRITE_OK or UART_WRITE_BUSY or UART_WRITE_INVBUFFER
+ */
 int UART_print(const char* str)
 {
     if(!str) return UART_WRITE_INVBUFFER;
     
     size_t n = 0;
-    while(*(str + n) != 0) ++n;
+    while((*(str + n) != 0) && (n <= TX_BUF_SIZE)) ++n;
     
     return UART_write((const uint8_t*)str, n);
 }
 
+/**
+ * @brief UART write, blocking
+ * @param data Pointer to the data buffer
+ * @param count Number of bytes to be transmitted
+ * @return UART_WRITE_OK or UART_WRITE_BUSY or UART_WRITE_INVBUFFER
+ */
 int UART_write(const uint8_t* data, size_t count)
 {
     if(TXIE) return UART_WRITE_BUSY;
@@ -92,22 +101,72 @@ int UART_write(const uint8_t* data, size_t count)
     return UART_WRITE_OK;
 }
 
-int UART_blocking_print(const char* str)
+/**
+ * @brief UART print, blocking
+ * @param str Pointer to a null terminated string
+ * @return UART_WRITE_OK or UART_WRITE_INVBUFFER
+ * 
+ * Waits until a potential ongoing transmission is finished and then starts the
+ * transmission of <i>str</i>. Does not return until this transmission is finnished.
+ */
+int UART_print_blocking(const char* str)
+{
+    int r = UART_print_wait(str);
+    while(UART_isTransmitting()) asm("NOP");
+    return r;
+}
+
+/**
+ * @brief UART write, blocking
+ * @param data Pointer to the data buffer
+ * @param count Number of bytes to be transmitted
+ * @return UART_WRITE_OK or UART_WRITE_INVBUFFER
+ * 
+ * Waits until a potential ongoing transmission is finished and then starts the
+ * transmission of <i>data</i>. Does not return until this transmission is finnished.
+ */
+int UART_write_blocking(const uint8_t* data, size_t count)
+{
+    int r = UART_write_wait(data, count);
+    while(UART_isTransmitting()) asm("NOP");
+    return r;
+}
+
+/**
+ * @brief UART print, waiting
+ * @param str Pointer to a null terminated string
+ * @return UART_WRITE_OK or UART_WRITE_INVBUFFER
+ * 
+ * Waits until a potential ongoing transmission is finished and then starts the
+ * transmission of <i>str</i>.
+ */
+int UART_print_wait(const char* str)
 {
     int r = UART_WRITE_BUSY;
     while(r == UART_WRITE_BUSY) r = UART_print(str);
-    while(UART_write(0, 0) == UART_WRITE_BUSY) asm("NOP");
     return r;
 }
 
-int UART_blocking_write(const uint8_t* data, size_t count)
+/**
+ * @brief UART write, waiting
+ * @param data Pointer to the data buffer
+ * @param count Number of bytes to be transmitted
+ * @return UART_WRITE_OK or UART_WRITE_INVBUFFER
+ * 
+ * Waits until a potential ongoing transmission is finished and then starts the
+ * transmission of <i>data</i>.
+ */
+int UART_write_wait(const uint8_t* data, size_t count)
 {
     int r = UART_WRITE_BUSY;
     while(r == UART_WRITE_BUSY) r = UART_write(data, count);
-    while(UART_write(0, 0) == UART_WRITE_BUSY) asm("NOP");
     return r;
 }
 
+/**
+ * @brief Get data from the rx buffer
+ * @return UART_READ_NODATA or UART_READ_BUFFEROVERFLOW or the next data byte
+ */
 int UART_read()
 {
     if(rxBufferOverflow) return UART_READ_BUFFEROVERFLOW;

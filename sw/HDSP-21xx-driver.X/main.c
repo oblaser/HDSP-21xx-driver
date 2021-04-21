@@ -46,7 +46,7 @@ int main()
     
 #if PRJ_HWTEST
     static int cnt = 0;
-    static char tmpStr[12];
+    static char hwTestStr[12];
     
     HDSP_init();
     
@@ -69,25 +69,36 @@ int main()
             }
             else
             {
-                UTIL_itoa((cnt % 2 ? cnt : (0 - cnt)), tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
-                size_t len = UTIL_strnlen(tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
+                UTIL_itoa((cnt % 2 ? cnt : (0 - cnt)), hwTestStr, (sizeof(hwTestStr)/sizeof(hwTestStr[0])));
+                size_t len = UTIL_strnlen(hwTestStr, (sizeof(hwTestStr)/sizeof(hwTestStr[0])));
 
                 HDSP_print("        ");
-                HDSP_printAt(tmpStr, (HDSP_nDIGITS - len), len);
+                HDSP_printAt(hwTestStr, (HDSP_nDIGITS - len), len);
 
                 SHR_LED_set(cnt);
 
-                UART_blocking_print(tmpStr);
-                UART_blocking_print("   ");
-                UART_blocking_print(UTIL_itoap(HDSP_nDIGITS - len));
-                UART_blocking_print("   ");
-                UART_blocking_print(UTIL_itoap(len));
-                UART_blocking_print("\n");
+                UART_print_wait(hwTestStr);
+                UART_print_wait("   ");
+                UART_print_wait(UTIL_itoap(HDSP_nDIGITS - len));
+                UART_print_wait("   ");
+                UART_print_wait(UTIL_itoap(len));
+                UART_print_wait("\n");
             }
             
             cnt += 3;
         }
     }
+#endif
+    
+#if (PRJ_DEBUG_UART)
+    UART_print_blocking("\n-===# started #===-\n");
+    
+    /*char tmpStr[11];
+    const uint8_t d[] = { 0xFA, 0xA5, 13 };
+    size_t len = UTIL_bufToHexStr(d, 3, tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
+    tmpStr[len] = 0x0A;
+    tmpStr[len + 1] = 0;
+    UART_print_wait(tmpStr);*/
 #endif
     
     while(1)
@@ -129,9 +140,9 @@ inline void errorHandler(const TASK_status_t* ts)
         COM_sendTaskError(ts);
         
 #if PRJ_DEBUG_UART
-        UART_blocking_print("task error: ");
-        UART_blocking_print(UTIL_itoap(*ts));
-        UART_blocking_print("\n");
+        UART_print_wait("task error: ");
+        UART_print_wait(UTIL_itoap(*ts));
+        UART_print_wait("\n");
 #endif
         
         HW_wdtClr();

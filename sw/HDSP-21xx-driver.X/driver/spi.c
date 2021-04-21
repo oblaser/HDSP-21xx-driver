@@ -53,7 +53,7 @@ void SPI_init()
 }*/
 
 // with SSPM = 0b0001 (Fosc/16) and two bytes the function takes 69us (compiler -O2) @8MHz
-void SPI_blocking_write(const uint8_t* data, size_t count)
+void SPI_write_blocking(const uint8_t* data, size_t count)
 {
     if(data)
     {

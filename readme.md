@@ -34,7 +34,7 @@ A driver for LED character displays. The PCB is designed as generic frontpanel f
 The answers first data byte is a status byte, which is interpreted as following:
 | Byte | Value | Description |
 |:---|:---|:---|
-| DATA0 | 0x00<br/>0x01<br/>0x02<br/>0x03<br/>0x04 ... 0xFF | OK<br/>General error<br/>Invalid parameter<br/>Invalid checksum<br/>_res._ |
+| DATA0 | 0x00<br/>0x01<br/>0x02<br/>0x03<br/>0x04 ... 0xFF | OK<br/>General error<br/>Invalid checksum<br/>Invalid parameter<br/>_res._ |
 
 
 ## Commands
@@ -52,7 +52,7 @@ The answers first data byte is a status byte, which is interpreted as following:
 |:---|:---|:---|
 | CMD | 0x01 ||
 | LEN | 0x04 ||
-| DATA0<br/>1<br/>2<br/>3 | 0xXX<br/>0x00<br/>0xXX<br/>0xXX | Status<br/>Type = Version<br/>Version major<br/>Version minor |
+| DATA0<br/>1<br/>2<br/>3 | 0xXX<br/>0x00<br/>0xXX<br/>0xXX | Status<br/>Info: Version<br/>Version major<br/>Version minor |
 | CS | 0xXX ||
 
 ### Set Display

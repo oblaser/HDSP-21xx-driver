@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -10,14 +10,21 @@
 #define _UART_H_
 
 #include "../types.h"
-#include "../project.h"
 
 
+//! Returned if the transmission has been started
 #define UART_WRITE_OK ((int)0)
+
+//! Returned if the data pointer is null
 #define UART_WRITE_INVBUFFER ((int)-1)
+
+//! Returned if a transmission is ongoing
 #define UART_WRITE_BUSY ((int)1)
 
+//! Returned if no new data is available
 #define UART_READ_NODATA ((int)-1)
+
+//! Returned if the rx buffer overflowed
 #define UART_READ_BUFFEROVERFLOW ((int)-2)
 
 
@@ -29,8 +36,10 @@ int UART_isTransmitting();
 int UART_print(const char* str);
 int UART_write(const uint8_t* data, size_t count);
 
-int UART_blocking_print(const char* str);
-int UART_blocking_write(const uint8_t* data, size_t count);
+int UART_print_blocking(const char* str);
+int UART_write_blocking(const uint8_t* data, size_t count);
+int UART_print_wait(const char* str);
+int UART_write_wait(const uint8_t* data, size_t count);
 
 int UART_read();
 

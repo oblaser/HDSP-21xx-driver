@@ -1,17 +1,17 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
 
-#include <assert.h>
-
 #include "../driver/hardware_16F690.h"
 #include "../driver/uart.h"
+#include "../project.h"
 #include "../types.h"
 #include "com.h"
+#include "util.h"
 
 
 #define COM_nFRAMEBYTES (3)
@@ -29,31 +29,44 @@
 
 #define COM_ANS_STATUS_OK       ((uint8_t)0x00)
 #define COM_ANS_STATUS_ERR      ((uint8_t)0x01)
-#define COM_ANS_STATUS_INVPARAM ((uint8_t)0x02)
-#define COM_ANS_STATUS_INVCS    ((uint8_t)0x03)
+#define COM_ANS_STATUS_INVCS    ((uint8_t)0x02)
+#define COM_ANS_STATUS_INVPARAM ((uint8_t)0x03)
 
 
 #define RXBUFFER_SIZE ((size_t)15)
 #define TXBUFFER_SIZE ((size_t)10)
 #define BUFFERPOS_LEN ((size_t)1)
 
-#define T_TIMEOUT (5) // * 10ms
+#if PRJ_DEBUG
+#define T_TIMEOUT (100) // * 10ms
+#else
+#define T_TIMEOUT (10) // * 10ms
+#endif
+
+#define COM_DEBUGUART (PRJ_DEBUG_UART && (1))
 
 
 typedef enum
 {
     S_init = 0,
     S_idle,
+    S_idleProc,
     S_proc,
     S_waitForApp,
     S_send,
-    S_sending
+    S_sending,
+    _S_last
 } state_t;
 
 
 uint8_t calcCheckSum(const uint8_t* data, size_t count);
 int isValidCmd(const uint8_t* data);
 int isValidParam(const uint8_t* data);
+
+
+#if COM_DEBUGUART
+char dbgStr[36];
+#endif
 
 
 static uint8_t rxBuffer[RXBUFFER_SIZE];
@@ -67,29 +80,53 @@ static state_t state = S_init;
 
 void COM_task(TASK_status_t* ts)
 {
+#if COM_DEBUGUART && 0
+    const char* stateStr[] = 
+    {
+        "init\n",
+        "idle\n",
+        "idleProc\n",
+        "proc\n",
+        "waitForApp\n",
+        "send\n",
+        "sending\n",
+    };
+    static state_t stateOld = _S_last;
+    if(stateOld != state)
+    {
+        UART_print_wait("COM state: ");
+        UART_print_wait(stateStr[state]);
+        stateOld = state;
+    }
+#endif
     switch(state)
     {
         case S_init:
-            UART_reset();
             rxBuffer[BUFFERPOS_LEN] = 0xFF - COM_nFRAMEBYTES;
-            rxIndex = 0;
-            tmr_timeout = -1;
             state = S_idle;
             break;
             
         case S_idle:
+            rxIndex = 0;
+            tmr_timeout = -1;
+            state = S_idleProc;
+            break;
+            
+        case S_idleProc:
             {
                 int rxb = UART_read();
 
                 if(rxb == UART_READ_BUFFEROVERFLOW)
                 {
-                    tmr_timeout = -1;
+                    UART_reset();
+                    
+                    txBuffer[0] = COM_CMD_ERRDEF;
+                    txBuffer[1] = 0x01;
+                    txBuffer[2] = COM_ERRDEF_BUFOF;
+
+                    state = S_send;
                 }
-                else if(rxb == UART_READ_NODATA)
-                {
-                    tmr_timeout = -1;
-                }
-                else
+                else if(rxb != UART_READ_NODATA)
                 {
                     tmr_timeout = T_TIMEOUT;
 
@@ -122,7 +159,7 @@ void COM_task(TASK_status_t* ts)
                     
                     state = S_send;
                 }
-                else if(!isValidCmd(txBuffer))
+                else if(!isValidCmd(rxBuffer))
                 {
                     txBuffer[0] = rxBuffer[0];
                     txBuffer[1] = 0x01;
@@ -130,7 +167,7 @@ void COM_task(TASK_status_t* ts)
                     
                     state = S_send;
                 }
-                else if(!isValidParam(txBuffer))
+                else if(!isValidParam(rxBuffer))
                 {
                     txBuffer[0] = rxBuffer[0];
                     txBuffer[1] = 0x01;
@@ -158,6 +195,24 @@ void COM_task(TASK_status_t* ts)
                     }
                 }
                 
+#if COM_DEBUGUART
+                size_t len;
+                
+                dbgStr[0] = 'R';
+                dbgStr[1] = '>';
+                len = UTIL_bufToHexStr(rxBuffer, ((size_t)rxBuffer[1] + COM_nFRAMEBYTES), dbgStr + 2, (sizeof(dbgStr)/sizeof(dbgStr[0])) - 2) + 2;
+                dbgStr[len] = 0;
+                UART_print_wait(dbgStr);
+                
+                dbgStr[0] = ' ';
+                dbgStr[1] = '(';
+                len = UTIL_byteToHexStr(cs, dbgStr + 2, (sizeof(dbgStr)/sizeof(dbgStr[0])) - 2) + 2;
+                dbgStr[len] = ')';
+                dbgStr[len + 1] = 0x0A;
+                dbgStr[len + 2] = 0;
+                UART_print_wait(dbgStr);
+#endif
+                
                 rxBuffer[BUFFERPOS_LEN] = 0xFF - COM_nFRAMEBYTES;
             }
             break;
@@ -171,6 +226,15 @@ void COM_task(TASK_status_t* ts)
                 size_t csPos = ((size_t)txBuffer[1] + COM_nFRAMEBYTES - 1);
                 txBuffer[csPos] = calcCheckSum(txBuffer, csPos);
                 state = S_sending;
+                
+#if COM_DEBUGUART
+                dbgStr[0] = 't';
+                dbgStr[1] = '>';
+                size_t len = UTIL_bufToHexStr(txBuffer, ((size_t)txBuffer[1] + COM_nFRAMEBYTES), dbgStr + 2, (sizeof(dbgStr)/sizeof(dbgStr[0])) - 2) + 2;
+                dbgStr[len] = 0x0A;
+                dbgStr[len + 1] = 0;
+                UART_print_wait(dbgStr);
+#endif
             }
             break;
             
@@ -201,7 +265,7 @@ void COM_sendTaskError(const TASK_status_t* ts)
     txBuffer[2] = *ts;
     txBuffer[3] = calcCheckSum(txBuffer, 3);
     
-    UART_blocking_write(txBuffer, 4);
+    UART_write_wait(txBuffer, 4);
 }
 
 

@@ -16,7 +16,7 @@
 
 #define PRJ_DEBUG (1)
 #define PRJ_DEBUG_UART (1)
-#define PRJ_HWTEST (1)
+#define PRJ_HWTEST (0)
 
 
 #define PRJ_PROGIO_MODE_OFF (0)

@@ -105,7 +105,7 @@ void send()
     data[0] = (uint8_t)((dataReg >> 8) & 0x00FF);
     data[1] = (uint8_t)(dataReg & 0x00FF);
     
-    SPI_blocking_write(data, 2);
+    SPI_write_blocking(data, 2);
     
     GPIO_SHR_LATCH = 1;
     GPIO_SHR_LATCH = 0;

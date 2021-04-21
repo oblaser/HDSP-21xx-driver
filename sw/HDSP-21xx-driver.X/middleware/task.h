@@ -10,7 +10,7 @@
 #define _TASK_H_
 
 
-#include <stdint.h>
+#include "../types.h"
 
 
 #define TASK_OK ((TASK_status_t)0)
