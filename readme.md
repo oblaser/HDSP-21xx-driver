@@ -1,6 +1,11 @@
 ﻿# HDSP-21xx-driver
 
-A driver for LED character displays.
+<div float="left">
+    <img src="./assets/HDSP-21xx_driver.jpg" alt="drawing" height="130"/>
+    <img src="./assets/display.jpg" alt="drawing" height="130"/>
+</div>
+
+A driver for LED character displays. The PCB is designed as generic frontpanel for several projects.
 
 ### Compatible Models
 

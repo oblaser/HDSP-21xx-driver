@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           30.03.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -19,8 +19,6 @@ typedef enum
     S_idle,
 } state_t;
 
-static uint8_t cnt = 0;
-static char dispStr[9] = "ABCDEFGH";
 
 
 

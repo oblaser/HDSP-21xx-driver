@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -10,7 +10,8 @@
 #include "hdsp_21xx.h"
 #include "shiftReg.h"
 
-
+#include "../driver/uart.h"
+#include "util.h"
 
 void write_char(size_t digit, char c);
 
@@ -32,6 +33,19 @@ void HDSP_print(const char* str)
         {
             if(i < n) write_char(i, str[i]);
             else write_char(i, 0x20);
+        }
+    }
+}
+
+void HDSP_printAt(const char* str, size_t pos, size_t count)
+{
+    if(str)
+    {
+        size_t i = pos;
+        while(((i - pos) < count) && (i < HDSP_nDIGITS))
+        {
+            write_char(i, str[i - pos]);
+            ++i;
         }
     }
 }

@@ -1,14 +1,23 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
 
 #include "util.h"
 
+
 #define _UTIL_ITOA_BUFFERSIZE (12)
+
+
+size_t UTIL_strnlen(const char* str, size_t size)
+{
+    size_t len = 0;
+    if(str) while((*(str + len) != 0) && (len < size)) ++len;
+    return len;
+}
 
 int UTIL_itoa(int32_t value, char* buffer, size_t bufferSize)
 {

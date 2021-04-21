@@ -18,6 +18,7 @@
 void HDSP_init();
 
 void HDSP_print(const char* str);
+void HDSP_printAt(const char* str, size_t pos, size_t count);
 
 
 #endif // _HDSP_21XX_H_

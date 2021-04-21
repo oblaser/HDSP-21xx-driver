@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -16,6 +16,7 @@
 
 #define PRJ_DEBUG (1)
 #define PRJ_DEBUG_UART (1)
+#define PRJ_HWTEST (1)
 
 
 #define PRJ_PROGIO_MODE_OFF (0)
@@ -31,7 +32,7 @@
 
 
 // config check
-#if(!PRJ_DEBUG && (PRJ_DEBUG_UART || (PRJ_PROGIO_MODE != PRJ_PROGIO_MODE_OFF)))
+#if(!PRJ_DEBUG && (PRJ_DEBUG_UART || (PRJ_PROGIO_MODE != PRJ_PROGIO_MODE_OFF) || PRJ_HWTEST))
 #error invalid config
 #endif
 

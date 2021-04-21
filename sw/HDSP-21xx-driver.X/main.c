@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -15,6 +15,7 @@
 #include "middleware/shiftReg.h"
 #include "middleware/task.h"
 #include "middleware/util.h"
+#include "middleware/hdsp_21xx.h"
 
 
 
@@ -41,6 +42,52 @@ int main()
     GPIO_PROGIO = 1;
     for(int i = 0; i < 10; ++i) HW_wdtClr();
     GPIO_PROGIO = 0;
+#endif
+    
+#if PRJ_HWTEST
+    static int cnt = 0;
+    static char tmpStr[12];
+    
+    HDSP_init();
+    
+    UART_print("\n-===# HW TEST #===-\n");
+    HDSP_print("HDSP2113");
+    
+    while(1)
+    {
+        HW_wdtClr();
+        
+        GPIO_input_t inp;
+        GPIO_inpDetect(&inp);
+        
+        if(inp.rising & GPIO_INP_BUTTON)
+        {
+            if(cnt == 0)
+            {
+                HDSP_printAt("\x0B\x0C", 1, 2);
+                HDSP_printAt("wxyz", 4, 4);
+            }
+            else
+            {
+                UTIL_itoa((cnt % 2 ? cnt : (0 - cnt)), tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
+                size_t len = UTIL_strnlen(tmpStr, (sizeof(tmpStr)/sizeof(tmpStr[0])));
+
+                HDSP_print("        ");
+                HDSP_printAt(tmpStr, (HDSP_nDIGITS - len), len);
+
+                SHR_LED_set(cnt);
+
+                UART_blocking_print(tmpStr);
+                UART_blocking_print("   ");
+                UART_blocking_print(UTIL_itoap(HDSP_nDIGITS - len));
+                UART_blocking_print("   ");
+                UART_blocking_print(UTIL_itoap(len));
+                UART_blocking_print("\n");
+            }
+            
+            cnt += 3;
+        }
+    }
 #endif
     
     while(1)
@@ -87,6 +134,7 @@ inline void errorHandler(const TASK_status_t* ts)
         UART_blocking_print("\n");
 #endif
         
+        HW_wdtClr();
         while(1) asm("NOP");
     }
 }
