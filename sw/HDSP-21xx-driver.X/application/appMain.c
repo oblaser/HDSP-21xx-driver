@@ -63,7 +63,7 @@ void APP_task(TASK_status_t* ts)
             
         case S_setDisp:
             {
-                HDSP_printAt(COM_APP_getDispPtr(), 0, 8);
+                HDSP_printAt((const char*)COM_APP_getDispPtr(), 0, 8);
                 COM_APP_sendOK();
                 state = S_idle;
             }

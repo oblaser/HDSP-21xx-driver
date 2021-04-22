@@ -61,19 +61,10 @@ void SHR_DISP_reset()
     send();
 }
 
-/*void SHR_DISP_read()
+void SHR_DISP_nWrite(uint8_t nWR)
 {
-    dataReg &= ~SHR_MASK_nRD;
-    send();
-    dataReg |= SHR_MASK_nRD;
-    send();
-}*/
-
-void SHR_DISP_write()
-{
-    dataReg &= ~SHR_MASK_nWR;
-    send();
-    dataReg |= SHR_MASK_nWR;
+    if(nWR) dataReg |= SHR_MASK_nWR;
+    else dataReg &= ~SHR_MASK_nWR;
     send();
 }
 

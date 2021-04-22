@@ -13,6 +13,8 @@
 #include "../driver/uart.h"
 #include "util.h"
 
+
+
 void write_char(size_t digit, char c);
 
 
@@ -58,8 +60,9 @@ void write_char(size_t digit, char c)
     SHR_DISP_setAddr(0x0038 | ((uint16_t)digit & 0x0007));
     SHR_DISP_nChipEnable(0);
     GPIO_DISP_R_nW(0);
+    SHR_DISP_nWrite(0);
     GPIO_DISP_setData((uint8_t)c);
-    SHR_DISP_write();
+    SHR_DISP_nWrite(1);
     GPIO_DISP_R_nW(1);
     SHR_DISP_nChipEnable(1);
 }

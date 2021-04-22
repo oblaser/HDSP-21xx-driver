@@ -19,8 +19,8 @@
 
 
 
-inline void errorHandler(const TASK_status_t* ts);
-inline void TMR0_isr();
+void errorHandler(const TASK_status_t* ts);
+void TMR0_isr();
 
 int main()
 {
@@ -126,7 +126,7 @@ void __interrupt() global_isr()
 
 
 
-inline void errorHandler(const TASK_status_t* ts)
+void errorHandler(const TASK_status_t* ts)
 {
     if(*ts)
     {
@@ -143,7 +143,7 @@ inline void errorHandler(const TASK_status_t* ts)
     }
 }
 
-inline void TMR0_isr()
+void TMR0_isr()
 {
     APP_timeHandler();
     COM_timeHandler();

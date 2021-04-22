@@ -20,8 +20,8 @@ static size_t txSize;*/
 
 void SPI_init()
 {
-    SSPCONbits.SSPM0 = 0;
-    SSPCONbits.SSPM1 = 1;
+    SSPCONbits.SSPM0 = 1;
+    SSPCONbits.SSPM1 = 0;
     SSPCONbits.SSPM2 = 0;
     SSPCONbits.SSPM3 = 0;
     

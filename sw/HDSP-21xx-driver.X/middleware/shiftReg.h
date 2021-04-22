@@ -42,8 +42,7 @@ void SHR_LED_set(uint16_t led);
 uint8_t SHR_LED_get();
 
 void SHR_DISP_reset();
-//void SHR_DISP_read();
-void SHR_DISP_write();
+void SHR_DISP_nWrite(uint8_t nWR);
 void SHR_DISP_setAddr(uint16_t addr);
 void SHR_DISP_nChipEnable(uint8_t nCE);
 
