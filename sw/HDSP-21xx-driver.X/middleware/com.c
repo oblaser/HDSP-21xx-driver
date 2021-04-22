@@ -157,6 +157,11 @@ void COM_task(TASK_status_t* ts)
                     txBuffer[1] = 0x01;
                     txBuffer[2] = COM_ANS_STATUS_INVCS;
                     
+#if PRJ_DEBUG
+                    txBuffer[1] = 0x02;
+                    txBuffer[3] = calcCheckSum(rxBuffer, rxIndex - 1);
+#endif
+                    
                     state = S_send;
                 }
                 else if(!isValidCmd(rxBuffer))

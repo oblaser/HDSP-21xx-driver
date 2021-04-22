@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           20.04.2021
+\date           21.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -16,6 +16,10 @@
 
 
 void HDSP_init();
+
+void HDSP_write(uint8_t addr, uint8_t data);
+
+void HDSP_setUDC(uint8_t index, const uint8_t* matrix);
 
 void HDSP_print(const char* str);
 void HDSP_printAt(const char* str, size_t pos, size_t count);

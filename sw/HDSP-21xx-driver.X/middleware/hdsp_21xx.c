@@ -24,6 +24,28 @@ void HDSP_init()
     SHR_DISP_reset();
 }
 
+// speed measurement in 1a379faed394999b486cfc6947dc504c544bbe0f
+void HDSP_write(uint8_t addr, uint8_t data)
+{
+    SHR_DISP_setAddr(addr);
+    SHR_DISP_nChipEnable(0);
+    GPIO_DISP_R_nW(0);
+    SHR_DISP_nWrite(0);
+    GPIO_DISP_setData(data);
+    SHR_DISP_nWrite(1);
+    GPIO_DISP_R_nW(1);
+    SHR_DISP_nChipEnable(1);
+}
+
+void HDSP_setUDC(uint8_t index, const uint8_t* matrix)
+{
+    if(matrix)
+    {
+        HDSP_write(0x20, index);
+        for(uint8_t i = 0; i < 7; ++i) HDSP_write(0x28 | i, matrix[i]);
+    }
+}
+
 void HDSP_print(const char* str)
 {
     if(str)
@@ -54,15 +76,7 @@ void HDSP_printAt(const char* str, size_t pos, size_t count)
 
 
 
-// 450us (SSPM=0b0001 / 8MHz / -O2)
 void write_char(size_t digit, char c)
 {
-    SHR_DISP_setAddr(0x0038 | ((uint16_t)digit & 0x0007));
-    SHR_DISP_nChipEnable(0);
-    GPIO_DISP_R_nW(0);
-    SHR_DISP_nWrite(0);
-    GPIO_DISP_setData((uint8_t)c);
-    SHR_DISP_nWrite(1);
-    GPIO_DISP_R_nW(1);
-    SHR_DISP_nChipEnable(1);
+    HDSP_write(0x38 | ((uint8_t)digit & 0x07), (uint8_t)c);
 }

@@ -30,6 +30,9 @@ typedef enum
 } state_t;
 
 
+int setupUDC();
+
+
 static uint8_t ioState;
 
 
@@ -47,7 +50,7 @@ void APP_task(TASK_status_t* ts)
     {
         case S_init:
             HDSP_init();
-            state = S_idle;
+            if(!setupUDC()) state = S_idle;
             break;
             
         case S_idle:
@@ -97,4 +100,146 @@ void APP_task(TASK_status_t* ts)
 
 void APP_timeHandler()
 {
+}
+
+
+
+// WDT safe
+int setupUDC()
+{
+    static uint8_t index = 0;
+    
+    uint8_t udc[7];
+    
+    if(index == 0)
+    {
+        // garbage
+        for(uint8_t i = 0; i < 7; ++i) udc[i] = i;
+    }
+    else if(index == 1)
+    {
+        // battery 0%
+        udc[0] = 0b01110;
+        udc[1] = 0b11111;
+        udc[2] = 0b10001;
+        udc[3] = 0b10001;
+        udc[4] = 0b10001;
+        udc[5] = 0b10001;
+        udc[6] = 0b11111;
+    }
+    else if(index == 2)
+    {
+        // battery 25%
+        udc[0] = 0b01110;
+        udc[1] = 0b11111;
+        udc[2] = 0b10001;
+        udc[3] = 0b10001;
+        udc[4] = 0b10001;
+        udc[5] = 0b11111;
+        udc[6] = 0b11111;
+    }
+    else if(index == 3)
+    {
+        // battery 50%
+        udc[0] = 0b01110;
+        udc[1] = 0b11111;
+        udc[2] = 0b10001;
+        udc[3] = 0b10001;
+        udc[4] = 0b11111;
+        udc[5] = 0b11111;
+        udc[6] = 0b11111;
+    }
+    else if(index == 4)
+    {
+        // battery 75%
+        udc[0] = 0b01110;
+        udc[1] = 0b11111;
+        udc[2] = 0b10001;
+        udc[3] = 0b11111;
+        udc[4] = 0b11111;
+        udc[5] = 0b11111;
+        udc[6] = 0b11111;
+    }
+    else if(index == 5)
+    {
+        // battery 100%
+        udc[0] = 0b01110;
+        udc[1] = 0b11111;
+        udc[2] = 0b11111;
+        udc[3] = 0b11111;
+        udc[4] = 0b11111;
+        udc[5] = 0b11111;
+        udc[6] = 0b11111;
+    }
+    else if(index == 6)
+    {
+        // smiley
+        udc[0] = 0;
+        udc[1] = 0b01010;
+        udc[2] = 0b01010;
+        udc[3] = 0;
+        udc[4] = 0b10001;
+        udc[5] = 0b01110;
+        udc[6] = 0;
+    }
+    else if(index == 7)
+    {
+        // circumflex accent
+        udc[0] = 0;
+        udc[1] = 0b00100;
+        udc[2] = 0b01010;
+        udc[3] = 0b10001;
+        udc[4] = 0;
+        udc[5] = 0;
+        udc[6] = 0;
+    }
+    else if(index == 8)
+    {
+        // light shade
+        udc[0] = 0b10001;
+        udc[1] = 0b00100;
+        udc[2] = udc[0];
+        udc[3] = udc[1];
+        udc[4] = udc[0];
+        udc[5] = udc[1];
+        udc[6] = udc[0];
+    }
+    else if(index == 9)
+    {
+        // dark shade
+        udc[0] = 0b11011;
+        udc[1] = 0b01110;
+        udc[2] = udc[0];
+        udc[3] = udc[1];
+        udc[4] = udc[0];
+        udc[5] = udc[1];
+        udc[6] = udc[0];
+    }
+    else if(index == 10)
+    {
+        // full block
+        for(uint8_t i = 0; i < 7; ++i) udc[i] = 0b11111;
+    }
+    else if(index == 11)
+    {
+        // triangle right
+        udc[0] = 0b01000;
+        udc[1] = 0b01100;
+        udc[2] = 0b01110;
+        udc[3] = 0b01111;
+        udc[4] = 0b01110;
+        udc[5] = 0b01100;
+        udc[6] = 0b01000;
+    }
+    else if(index == 12)
+    {
+        // vertical line
+        for(uint8_t i = 0; i < 7; ++i) udc[i] = 0b00100;
+    }
+    else return 0;
+    
+    HDSP_setUDC(index, udc);
+    
+    ++index;
+    return 1;
 }
