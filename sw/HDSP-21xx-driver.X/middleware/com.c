@@ -268,9 +268,10 @@ uint8_t COM_APP_cmd()
     return COM_CMD_NONE;
 }
 
-const uint8_t* COM_APP_getDispPtr()
+void COM_APP_getDispPtr(const uint8_t** buffer, size_t* count)
 {
-    return pRxData;
+    *buffer = pRxData;
+    *count = rxBuffer[BUFFERPOS_LEN];
 }
 
 uint8_t COM_APP_getIoData()
@@ -328,7 +329,7 @@ int isValidCmd(const uint8_t* data)
     if(data[0] == COM_CMD_NONE) return 0;
     
     if(((data[BUFFERPOS_CMD] == COM_CMD_GETINFO) && (data[BUFFERPOS_LEN] == 1)) ||
-        ((data[BUFFERPOS_CMD] == COM_CMD_SETDISP) && (data[BUFFERPOS_LEN] == 8)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETDISP) && (data[BUFFERPOS_LEN] > 0) && (data[BUFFERPOS_LEN] <= 8)) ||
         ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && (data[BUFFERPOS_LEN] == 1)) ||
         ((data[BUFFERPOS_CMD] == COM_CMD_GETIO) && (data[BUFFERPOS_LEN] == 0)))
     {

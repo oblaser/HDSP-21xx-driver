@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           21.04.2021
+\date           23.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -66,7 +66,11 @@ void APP_task(TASK_status_t* ts)
             
         case S_setDisp:
             {
-                HDSP_printAt((const char*)COM_APP_getDispPtr(), 0, 8);
+                const uint8_t* buffer;
+                size_t count;
+                COM_APP_getDispPtr(&buffer, &count);
+                HDSP_printAt((const char*)buffer, 0, count);
+                HDSP_printAt("        ", count, 8);
                 COM_APP_sendOK();
                 state = S_idle;
             }

@@ -60,8 +60,8 @@ The answers first data byte is a status byte, which is interpreted as following:
 | Byte | Value | Description |
 |:---|:---|:---|
 | CMD | 0x0A ||
-| LEN | 0x08 ||
-| DATA0<br/>...<br/>DATA7 | 0xXX<br/>...<br/>0xXX | Digit 0<br/>...<br/>Digit 7 |
+| LEN | 0xXX | Number of chars |
+| DATA0<br/>...<br/>DATAn | 0xXX<br/>...<br/>0xXX | Digit 0<br/>...<br/>Digit n |
 | CS | 0xXX ||
 
 #### Answer

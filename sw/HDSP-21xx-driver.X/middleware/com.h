@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           21.04.2021
+\date           23.04.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -25,7 +25,7 @@ void COM_task(TASK_status_t* ts);
 void COM_timeHandler();
 
 uint8_t COM_APP_cmd();
-const uint8_t* COM_APP_getDispPtr();
+void COM_APP_getDispPtr(const uint8_t** buffer, size_t* count);
 uint8_t COM_APP_getIoData();
 void COM_APP_sendOK();
 void COM_APP_sendGetIO(uint8_t ioState);
