@@ -117,29 +117,6 @@ The data format is described in the displays [datasheet](https://docs.broadcom.c
 | 0x5E &#94; | &#8593; (U+2191) |
 | 0x7C &#124; | &#166; (U+00A6) |
 
-### Control Characters
-Control Characters are displayed according to the following table:
-| char | displayed as || char | displayed as |
-|:---:|:---:|:---:|:---:|:---:|
-| 0x00 | &#9204; (U+23F4) || 0x10 | &#; () |
-| 0x01 | &#191; (U+00BF) || 0x11 | &#; () |
-| 0x02 | x̅ (U+0078 U+0305) || 0x12 | &#; () |
-| 0x03 | N̅ (U+004E U+0305) || 0x13 | &#; () |
-| 0x04 | n̅ (U+006E U+0305) || 0x14 | &#; () |
-| 0x05 | &#945; (U+03B1) || 0x15 | &#; () |
-| 0x06 | &#; () || 0x16 | &#; () |
-| 0x07 | &#; () || 0x17 | &#; () |
-| 0x08 | &#; () || 0x18 | &#; () |
-| 0x09 | &#; () || 0x19 | &#; () |
-| 0x0A | &#; () || 0x1A | &#; () |
-| 0x0B | &#; () || 0x1B | &#; () |
-| 0x0C | &#; () || 0x1C | &#; () |
-| 0x0D | &#; () || 0x1D | &#; () |
-| 0x0E | &#; () || 0x1E | &#; () |
-| 0x0F | &#; () || 0x1F | &#; () |
-||||||
-| 0x7F | &#9618; (U+2592) ||||
-
 ### Default UDC (User Defined Characters)
 The HDSP does not have any default UDCs, but the driver software provides the following defaults:
 
