@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           21.04.2021
+\date           10.07.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -19,7 +19,7 @@
 #define COM_CMD_ERRDEF  ((uint8_t)0xE0)
 #define COM_CMD_ERRTASK ((uint8_t)0xE1)
 
-#define COM_ERRDEF_UNSPEC   ((uint8_t)0x00)
+//#define COM_ERRDEF_UNSPEC   ((uint8_t)0x00) // not used yet
 #define COM_ERRDEF_BUFOF    ((uint8_t)0x01)
 #define COM_ERRDEF_TIMEOUT  ((uint8_t)0x02)
 
@@ -261,6 +261,12 @@ void COM_timeHandler()
     if(tmr_timeout > 0) --tmr_timeout;
 }
 
+const uint8_t* COM_getData(size_t* len)
+{
+    if(len) *len = rxBuffer[BUFFERPOS_LEN];
+    return pRxData;
+}
+
 uint8_t COM_APP_cmd()
 {
     if(state == S_waitForApp) return rxBuffer[0];
@@ -330,6 +336,7 @@ int isValidCmd(const uint8_t* data)
     
     if(((data[BUFFERPOS_CMD] == COM_CMD_GETINFO) && (data[BUFFERPOS_LEN] == 1)) ||
         ((data[BUFFERPOS_CMD] == COM_CMD_SETDISP) && (data[BUFFERPOS_LEN] > 0) && (data[BUFFERPOS_LEN] <= 8)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETDISPAT) && (data[BUFFERPOS_LEN] > 0) && (data[BUFFERPOS_LEN] <= 9)) ||
         ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && (data[BUFFERPOS_LEN] == 1)) ||
         ((data[BUFFERPOS_CMD] == COM_CMD_GETIO) && (data[BUFFERPOS_LEN] == 0)))
     {
@@ -344,7 +351,8 @@ int isValidParam(const uint8_t* data)
     if(!data) return 0;
     
     if(((data[BUFFERPOS_CMD] == COM_CMD_GETINFO) && (data[BUFFERPOS_DATA] > 0x00)) ||
-        ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && ((data[BUFFERPOS_DATA] & 0xF0) != 0)))
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETIO) && ((data[BUFFERPOS_DATA] & 0xF0) != 0)) ||
+        ((data[BUFFERPOS_CMD] == COM_CMD_SETDISPAT) && (data[BUFFERPOS_DATA] > 7))) // < 0 check not neccessary because data is unsigned
     {
         return 0;
     }

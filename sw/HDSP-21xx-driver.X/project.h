@@ -14,7 +14,7 @@
 #define PRJ_VERSION_MIN (0)
 
 
-#define PRJ_DEBUG (1)
+#define PRJ_DEBUG (0)
 #define PRJ_DEBUG_UART (0)
 #define PRJ_HWTEST (0)
 

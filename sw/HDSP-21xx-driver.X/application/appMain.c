@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           23.04.2021
+\date           10.07.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -24,6 +24,7 @@ typedef enum
     S_init = 0,
     S_idle,
     S_setDisp,
+    S_setDispAt,
     S_setIO,
     S_getIO,
     _S_last
@@ -58,6 +59,7 @@ void APP_task(TASK_status_t* ts)
                 uint8_t cmd = COM_APP_cmd();
                 
                 if(cmd == COM_CMD_SETDISP) state = S_setDisp;
+                else if(cmd == COM_CMD_SETDISPAT) state = S_setDispAt;
                 else if(cmd == COM_CMD_SETIO) state = S_setIO;
                 else if(cmd == COM_CMD_GETIO) state = S_getIO;
                 else if(cmd != COM_CMD_NONE) *ts |= (TASK_TAPP | TASK_INVCMD);
@@ -71,6 +73,16 @@ void APP_task(TASK_status_t* ts)
                 COM_APP_getDispPtr(&buffer, &count);
                 HDSP_printAt((const char*)buffer, 0, count);
                 HDSP_printAt("        ", count, 8);
+                COM_APP_sendOK();
+                state = S_idle;
+            }
+            break;
+            
+        case S_setDispAt:
+            {
+                size_t len;
+                const uint8_t* buffer = COM_getData(&len);
+                HDSP_printAt(&buffer[1], buffer[0], len - 1);
                 COM_APP_sendOK();
                 state = S_idle;
             }

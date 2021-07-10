@@ -49,6 +49,23 @@ The answers first data byte is a status byte, which is interpreted as following:
 | DATA | 0xXX | Status |
 | CS | 0xXX ||
 
+### Set Display At
+#### Command
+| Byte | Value | Description |
+|:---|:---|:---|
+| CMD | 0x0B ||
+| LEN | 0xXX ||
+| DATA0<br/>DATA1<br/>...<br/>DATAn | 0xXX<br/>0xXX<br/>...<br/>0xXX | Position<br/>Digit 0<br/>...<br/>Digit n |
+| CS | 0xXX ||
+
+#### Answer
+| Byte | Value | Description |
+|:---|:---|:---|
+| CMD | 0x0B ||
+| LEN | 0x01 ||
+| DATA | 0xXX | Status |
+| CS | 0xXX ||
+
 ### Set I/O
 #### Command
 | Byte | Value | Description |
@@ -92,7 +109,7 @@ May be sent at any time and indicate an error.
 |:---|:---|:---|
 | CMD | 0xE0 ||
 | LEN | 0x01 ||
-| DATA | 0x00<br/>0x01<br/>0x02<br/>0x03 ... 0xFF | Unspecified error<br/>RX buffer overflow<br/>Timeout<br/>_res._ |
+| DATA | 0x00<br/>0x01<br/>0x02<br/>0x03 ... 0xFF | _res._<br/>RX buffer overflow<br/>Timeout<br/>_res._ |
 | CS | 0xXX ||
 
 ### Task Error
