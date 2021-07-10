@@ -1,7 +1,7 @@
 /*!
 
 \author         Oliver Blaser
-\date           21.04.2021
+\date           10.07.2021
 \copyright      GNU GPLv3 - Copyright (c) 2021 Oliver Blaser
 
 */
@@ -11,7 +11,7 @@
 
 
 #define PRJ_VERSION_MAJ (1)
-#define PRJ_VERSION_MIN (0)
+#define PRJ_VERSION_MIN (1)
 
 
 #define PRJ_DEBUG (0)

@@ -21,3 +21,8 @@ A driver for LED character displays. The PCB is designed as generic frontpanel f
 - HDSP-2503 \*
 
 \* Due to their dimensions they are only software compatible and do not fit on the PCB.
+
+
+## Programming the PIC
+
+The PIC can be programmed with the Microchip IPE and the *.hex files in the releases.
