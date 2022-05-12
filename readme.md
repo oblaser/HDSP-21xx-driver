@@ -7,6 +7,10 @@
 
 A driver for LED character displays. The PCB is designed as generic frontpanel for several projects.
 
+An example can be found in the uart test of the
+[rpihal](https://github.com/oblaser/rpihal/blob/main/test/system/uart.cpp)
+project.
+
 ### Compatible Models
 
 - HDSP-2107

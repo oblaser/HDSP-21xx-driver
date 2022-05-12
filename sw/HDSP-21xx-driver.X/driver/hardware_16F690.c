@@ -52,25 +52,25 @@ void HW_init()
     // 6.0 Timer1
     //--------------------------------
     
-    // off by default, no changes needed
+    // disabled by default, no changes needed
     
     //--------------------------------
     // 7.0 Timer2
     //--------------------------------
     
-    // off by default, no changes needed
+    // disabled by default, no changes needed
     
     //--------------------------------
     // 8.0 Comparator
     //--------------------------------
     
-    // off by default, no changes needed
+    // disabled by default, no changes needed
     
     //--------------------------------
     // 9.0 ADC
     //--------------------------------
     
-    // off by default, no changes needed
+    // disabled by default, no changes needed
     
     //--------------------------------
     // 10.0 EEPROM
@@ -82,7 +82,7 @@ void HW_init()
     // 11.0 ECCP+
     //--------------------------------
     
-    // off by default, no changes needed
+    // disabled by default, no changes needed
     
     //--------------------------------
     // 12.0 EUSART
